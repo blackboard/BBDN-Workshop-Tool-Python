@@ -1,0 +1,8 @@
+pip-tools
+flask
+pylti1p3
+flask_caching
+flask_login
+cachetools
+pycryptodome
+jwcrypto
