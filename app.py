@@ -11,11 +11,10 @@ from flask_login import login_required
 from pylti1p3.contrib.flask import FlaskMessageLaunch, FlaskOIDCLogin, FlaskRequest, FlaskCacheDataStorage
 from pylti1p3.tool_config import ToolConfJsonFile
 
-import Config
+import config
 from RestAuthContoller import RestAuthController
 
 ## TODO
-
 PAGE_TITLE = 'Title'
 
 
@@ -34,7 +33,7 @@ app = Flask('LTI-Workshop', template_folder='templates', static_folder='static')
 
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 
-app.config.from_mapping(Config.config)
+app.config.from_mapping(config.config)
 
 cache = Cache(app)
 
@@ -115,9 +114,9 @@ def launch():
 
     # Add the one_time_session_cookie to the query parameters to send to the Authorization Code endpoint
     params = {
-        'redirect_uri': Config.config['SERVER_NAME'] + '/authcode/',
+        'redirect_uri': config.config['SERVER_NAME'] + '/authcode/',
         'response_type': 'code',
-        'client_id': Config.config['LEARN_REST_KEY'],
+        'client_id': config.config['LEARN_REST_KEY'],
         'one_time_session_token': one_time_session_token,
         'scope': '*',
         'state': str(uuid.uuid4())
@@ -143,15 +142,14 @@ def authcode():
     token = restAuthController.getToken()
     uuid = restAuthController.getUuid()
 
-
     # TODO Implement REST call to get course created date, add it and data from launch to kwargs
-
 
     tp_kwargs = {
         'title': PAGE_TITLE,
     }
 
     return render_template('index.html', **tp_kwargs)
+
 
 if __name__ == '__main__':
     restAuthController = None

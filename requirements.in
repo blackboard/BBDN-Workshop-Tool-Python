@@ -6,3 +6,4 @@ flask_login
 cachetools
 pycryptodome
 jwcrypto
+decouple
