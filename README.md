@@ -39,7 +39,6 @@ If you want to modify your configuration it's best to create a `.env` file. Thes
 PORT='5000'
 DOMAIN='localhost'
 FRONTEND_URL='http://localhost:3000'
-Collapse
 ```
 
 

@@ -4,7 +4,7 @@ import urllib
 import uuid
 from tempfile import mkdtemp
 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask import redirect, request
 from flask_caching import Cache
 from flask_login import login_required
@@ -33,7 +33,7 @@ app = Flask('LTI-Workshop', template_folder='templates', static_folder='static')
 
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 
-app.config.from_mapping(config.config)
+app.config.from_mapping(config.tool_config)
 
 cache = Cache(app)
 
@@ -114,9 +114,9 @@ def launch():
 
     # Add the one_time_session_cookie to the query parameters to send to the Authorization Code endpoint
     params = {
-        'redirect_uri': config.config['SERVER_NAME'] + '/authcode/',
+        'redirect_uri': config.tool_config['SERVER_NAME'] + '/authcode/',
         'response_type': 'code',
-        'client_id': config.config['LEARN_REST_KEY'],
+        'client_id': config.tool_config['LEARN_REST_KEY'],
         'one_time_session_token': one_time_session_token,
         'scope': '*',
         'state': str(uuid.uuid4())
@@ -149,6 +149,12 @@ def authcode():
     }
 
     return render_template('index.html', **tp_kwargs)
+
+
+@app.route('/jwks/', methods=['GET'])
+def get_jwks():
+    tool_conf = ToolConfJsonFile(get_lti_config_path())
+    return jsonify({'keys': tool_conf.get_jwks()})
 
 
 if __name__ == '__main__':

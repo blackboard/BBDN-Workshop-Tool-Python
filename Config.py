@@ -1,8 +1,11 @@
 # TODO Add the right values
 from tempfile import mkdtemp
+from decouple import config
 
-config = {
-    "DEBUG": True,
+DOMAIN = config('DOMAIN', default='0.0.0.0')
+PORT = config('PORT', default='5000')
+tool_config = {
+    "DEBUG": config('DEBUG', default=True, cast=bool),
     "ENV": "production",
     "CACHE_TYPE": "simple",
     "CACHE_DEFAULT_TIMEOUT": 600,
@@ -14,6 +17,6 @@ config = {
     "SESSION_COOKIE_SECURE": True,  # should be True in case of HTTPS usage (production)
     "SESSION_COOKIE_SAMESITE": "None",  # should be 'None' in case of HTTPS usage (production)
     "DEBUG_TB_INTERCEPT_REDIRECTS": False,
-    "SERVER_NAME": "127.0.0.1:5000",
+    "SERVER_NAME": DOMAIN + (':' + PORT) if PORT != '80' else '',
     "LEARN_REST_KEY" : "somekey"
 }

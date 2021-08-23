@@ -18,6 +18,8 @@ click==8.0.1
     #   pip-tools
 cryptography==3.4.7
     # via jwcrypto
+decouple==0.0.7
+    # via -r requirements.in
 deprecated==1.2.12
     # via jwcrypto
 flask==2.0.1
