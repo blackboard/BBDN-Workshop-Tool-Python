@@ -1,8 +1,10 @@
 pip-tools
 flask
 pylti1p3
+gunicorn
 flask_caching
 flask_login
 cachetools
 pycryptodome
 jwcrypto
+python-decouple

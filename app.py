@@ -4,18 +4,17 @@ import urllib
 import uuid
 from tempfile import mkdtemp
 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask import redirect, request
 from flask_caching import Cache
-from flask_login import login_required
+#from flask_login import login_required
 from pylti1p3.contrib.flask import FlaskMessageLaunch, FlaskOIDCLogin, FlaskRequest, FlaskCacheDataStorage
 from pylti1p3.tool_config import ToolConfJsonFile
 
-import Config
+import Config as config
 from RestAuthContoller import RestAuthController
 
 ## TODO
-
 PAGE_TITLE = 'Title'
 
 
@@ -34,13 +33,12 @@ app = Flask('LTI-Workshop', template_folder='templates', static_folder='static')
 
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 
-app.config.from_mapping(Config.config)
+app.config.from_mapping(config.tool_config)
 
 cache = Cache(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
-@login_required
 def index():
     return render_template('index.html')
 
@@ -115,9 +113,9 @@ def launch():
 
     # Add the one_time_session_cookie to the query parameters to send to the Authorization Code endpoint
     params = {
-        'redirect_uri': Config.config['SERVER_NAME'] + '/authcode/',
+        'redirect_uri': config.tool_config['SERVER_NAME'] + '/authcode/',
         'response_type': 'code',
-        'client_id': Config.config['LEARN_REST_KEY'],
+        'client_id': config.tool_config['LEARN_REST_KEY'],
         'one_time_session_token': one_time_session_token,
         'scope': '*',
         'state': str(uuid.uuid4())
@@ -143,15 +141,20 @@ def authcode():
     token = restAuthController.getToken()
     uuid = restAuthController.getUuid()
 
-
     # TODO Implement REST call to get course created date, add it and data from launch to kwargs
-
 
     tp_kwargs = {
         'title': PAGE_TITLE,
     }
 
     return render_template('index.html', **tp_kwargs)
+
+
+@app.route('/jwks/', methods=['GET'])
+def get_jwks():
+    tool_conf = ToolConfJsonFile(get_lti_config_path())
+    return jsonify({'keys': tool_conf.get_jwks()})
+
 
 if __name__ == '__main__':
     restAuthController = None

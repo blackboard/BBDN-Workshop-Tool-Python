@@ -11,7 +11,7 @@ import urllib.parse
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import Config
-import Config
+import Config as config
 
 
 class RestAuthController():
@@ -19,23 +19,23 @@ class RestAuthController():
 
     def __init__(self, authcode):
 
-        self.KEY = Config.config['learn_rest_key']
-        self.SECRET = Config.config['learn_rest_secret']
+        self.KEY = config.tool_config['LEARN_REST_KEY']
+        self.SECRET = config.tool_config['LEARN_REST_SECRET']
 
         self.CREDENTIALS = 'authorization_code'
         self.PAYLOAD = {
             'grant_type': 'authorization_code'
         }
         self.TOKEN = None
-        self.target_url = Config.config['learn_rest_url']
+        self.target_url = config.tool_config['LEARN_REST_URL']
 
-        self.app_url = Config.config['app_url']
+        self.app_url = config.tool_config['APP_URL']
 
         self.authcode = authcode
 
         self.EXPIRES_AT = ''
 
-        if Config.config['verify_certs'] == 'True':
+        if config.tool_config['VERIFY_CERTS'] == 'True':
             self.verify_certs = True
         else:
             self.verify_certs = False
