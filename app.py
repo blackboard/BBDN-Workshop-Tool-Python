@@ -7,11 +7,11 @@ from tempfile import mkdtemp
 from flask import Flask, render_template, jsonify
 from flask import redirect, request
 from flask_caching import Cache
-from flask_login import login_required
+#from flask_login import login_required
 from pylti1p3.contrib.flask import FlaskMessageLaunch, FlaskOIDCLogin, FlaskRequest, FlaskCacheDataStorage
 from pylti1p3.tool_config import ToolConfJsonFile
 
-import config
+import Config as config
 from RestAuthContoller import RestAuthController
 
 ## TODO
@@ -39,7 +39,6 @@ cache = Cache(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
-@login_required
 def index():
     return render_template('index.html')
 

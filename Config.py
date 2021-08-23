@@ -18,5 +18,9 @@ tool_config = {
     "SESSION_COOKIE_SAMESITE": "None",  # should be 'None' in case of HTTPS usage (production)
     "DEBUG_TB_INTERCEPT_REDIRECTS": False,
     "SERVER_NAME": DOMAIN + (':' + PORT) if PORT != '80' else '',
-    "LEARN_REST_KEY" : "somekey"
+    "LEARN_REST_KEY" : "somekey",
+    "LEARN_REST_SECRET" : "somekey",
+    "LEARN_REST_HOST" : "somekey",
+    "APP_URL" : "somekey",
+    "VERIFY_CERTS" : 'True'
 }
